@@ -1,435 +1,367 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workday</title>
-  <link rel="icon" href="favicon.png" type="image/png">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Workday</title>
+<link rel="icon" href="favicon.png" type="image/png">
 
-  <style>
-    :root{
-      --bg:#0b0f14;
-      --bg-2:#0f141b;
-      --card:#121821;
-      --card-2:#151c26;
-      --border:rgba(255,255,255,.08);
-      --border-strong:rgba(255,255,255,.14);
-      --text:#e6edf3;
-      --muted:#8b949e;
-      --accent:#58a6ff;
-      --accent-soft:rgba(88,166,255,.12);
-      --success:#3fb950;
-      --shadow:0 25px 60px rgba(0,0,0,.45);
-      --radius:18px;
-    }
+<style>
+:root{
+  --bg:#0b0f14;
+  --bg-2:#0f141b;
+  --card:#121821;
+  --border:rgba(255,255,255,.08);
+  --border-strong:rgba(255,255,255,.14);
+  --text:#e6edf3;
+  --muted:#8b949e;
+  --accent:#58a6ff;
+  --accent-soft:rgba(88,166,255,.12);
+  --success:#3fb950;
+  --offline:#6e7681;
+  --shadow:0 25px 60px rgba(0,0,0,.45);
+}
 
-    *{
-      box-sizing:border-box;
-      margin:0;
-      padding:0;
-    }
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
 
-    html{
-      scroll-behavior:smooth;
-    }
+body{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:24px;
+background:
+radial-gradient(circle at top, rgba(88,166,255,.10) 0%, transparent 30%),
+linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+color:var(--text);
+}
 
-    body{
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-      background:
-        radial-gradient(circle at top, rgba(88,166,255,.10) 0%, transparent 30%),
-        radial-gradient(circle at bottom right, rgba(255,255,255,.04) 0%, transparent 25%),
-        linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
-      color:var(--text);
-    }
+.container{
+width:100%;
+max-width:760px;
+}
 
-    .container{
-      width:100%;
-      max-width:760px;
-    }
+.panel{
+background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+border:1px solid var(--border);
+border-radius:24px;
+box-shadow:var(--shadow);
+}
 
-    .panel{
-      position:relative;
-      overflow:hidden;
-      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
-      border:1px solid var(--border);
-      border-radius:24px;
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
-    }
+.content{
+padding:28px;
+}
 
-    .panel::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(135deg, rgba(88,166,255,.08), transparent 28%),
-        linear-gradient(315deg, rgba(255,255,255,.025), transparent 24%);
-      pointer-events:none;
-    }
+.header{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+margin-bottom:24px;
+}
 
-    .content{
-      position:relative;
-      z-index:1;
-      padding:28px;
-    }
+.eyebrow{
+display:inline-flex;
+align-items:center;
+gap:8px;
+padding:6px 10px;
+border:1px solid var(--border);
+border-radius:999px;
+background:rgba(255,255,255,.03);
+color:var(--muted);
+font-size:.75rem;
+letter-spacing:.08em;
+text-transform:uppercase;
+margin-bottom:14px;
+}
 
-    .header{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:16px;
-      margin-bottom:24px;
-    }
+.eyebrow-dot{
+width:8px;
+height:8px;
+border-radius:50%;
+background:var(--success);
+}
 
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:6px 10px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      background:rgba(255,255,255,.03);
-      color:var(--muted);
-      font-size:.75rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      margin-bottom:14px;
-    }
+h1{
+font-size:2.2rem;
+letter-spacing:-.03em;
+margin-bottom:10px;
+}
 
-    .eyebrow-dot{
-      width:8px;
-      height:8px;
-      border-radius:50%;
-      background:var(--success);
-      box-shadow:0 0 10px rgba(63,185,80,.45);
-      flex-shrink:0;
-    }
+.subtitle{
+color:var(--muted);
+font-size:.95rem;
+}
 
-    h1{
-      font-size:clamp(1.8rem, 4vw, 2.5rem);
-      line-height:1.05;
-      letter-spacing:-0.04em;
-      margin-bottom:10px;
-    }
+.header-side{
+text-align:right;
+}
 
-    .subtitle{
-      color:var(--muted);
-      font-size:.98rem;
-      line-height:1.6;
-      max-width:540px;
-    }
+.count{
+font-size:2rem;
+font-weight:700;
+}
 
-    .header-side{
-      text-align:right;
-      min-width:110px;
-    }
+.count-label{
+color:var(--muted);
+font-size:.75rem;
+text-transform:uppercase;
+}
 
-    .count{
-      font-size:2rem;
-      font-weight:700;
-      letter-spacing:-0.04em;
-    }
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+margin-top:22px;
+}
 
-    .count-label{
-      color:var(--muted);
-      font-size:.78rem;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      margin-top:4px;
-    }
+.project{
+display:block;
+text-decoration:none;
+color:inherit;
+background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+border:1px solid var(--border);
+border-radius:18px;
+padding:16px;
+transition:.18s ease;
+}
 
-    .grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-      margin-top:22px;
-    }
+.project:hover{
+transform:translateY(-3px);
+border-color:var(--border-strong);
+background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+}
 
-    .project{
-      display:block;
-      text-decoration:none;
-      color:inherit;
-      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
-      border:1px solid var(--border);
-      border-radius:18px;
-      padding:16px;
-      transition:
-        transform .18s ease,
-        border-color .18s ease,
-        background .18s ease,
-        box-shadow .18s ease;
-      box-shadow:0 10px 24px rgba(0,0,0,.18);
-    }
+.project-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
 
-    .project:hover{
-      transform:translateY(-3px);
-      border-color:var(--border-strong);
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
-      box-shadow:0 16px 32px rgba(0,0,0,.28);
-    }
+.icon{
+width:40px;
+height:40px;
+border-radius:10px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:var(--accent-soft);
+color:var(--accent);
+}
 
-    .project-top{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:12px;
-    }
+.status{
+font-size:.7rem;
+padding:4px 8px;
+border-radius:999px;
+border:1px solid var(--border);
+}
 
-    .icon{
-      width:42px;
-      height:42px;
-      border-radius:12px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:1rem;
-      color:var(--accent);
-      background:var(--accent-soft);
-      border:1px solid rgba(88,166,255,.16);
-      flex-shrink:0;
-    }
+.status.online{
+background:rgba(63,185,80,.08);
+}
 
-    .status{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:5px 9px;
-      border-radius:999px;
-      font-size:.72rem;
-      color:#c9d1d9;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.025);
-      white-space:nowrap;
-    }
+.status.online::before{
+content:"● ";
+color:var(--success);
+}
 
-    .status::before{
-      content:"";
-      width:7px;
-      height:7px;
-      border-radius:50%;
-      background:var(--success);
-      box-shadow:0 0 8px rgba(63,185,80,.45);
-      flex-shrink:0;
-    }
+.status.offline{
+background:rgba(110,118,129,.08);
+color:var(--offline);
+}
 
-    .project-name{
-      font-size:1.04rem;
-      font-weight:600;
-      letter-spacing:-0.02em;
-      margin-bottom:6px;
-    }
+.status.offline::before{
+content:"● ";
+color:var(--offline);
+}
 
-    .project-desc{
-      color:var(--muted);
-      font-size:.9rem;
-      line-height:1.5;
-      min-height:42px;
-    }
+.project-name{
+font-weight:600;
+margin-bottom:4px;
+}
 
-    .project-bottom{
-      margin-top:14px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-    }
+.project-desc{
+color:var(--muted);
+font-size:.9rem;
+}
 
-    .tag{
-      font-size:.72rem;
-      color:#c9d1d9;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.03);
-      padding:6px 9px;
-      border-radius:999px;
-    }
+.project-bottom{
+margin-top:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
 
-    .open{
-      font-size:.85rem;
-      color:var(--accent);
-      display:flex;
-      align-items:center;
-      gap:6px;
-      font-weight:500;
-    }
+.tag{
+font-size:.7rem;
+padding:5px 8px;
+border-radius:999px;
+border:1px solid var(--border);
+background:rgba(255,255,255,.03);
+}
 
-    .open span{
-      transition:transform .18s ease;
-    }
+.open{
+font-size:.8rem;
+color:var(--accent);
+}
 
-    .project:hover .open span{
-      transform:translateX(3px);
-    }
+.project.offline{
+opacity:.45;
+cursor:not-allowed;
+}
 
-    .footer{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      margin-top:18px;
-      padding-top:18px;
-      border-top:1px solid var(--border);
-      color:var(--muted);
-      font-size:.78rem;
-    }
+.project.offline:hover{
+transform:none;
+border-color:var(--border);
+background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+}
 
-    .footer-left{
-      opacity:.9;
-    }
+.project.offline .open{
+display:none;
+}
 
-    .footer-right{
-      opacity:.75;
-      text-align:right;
-    }
+.footer{
+margin-top:20px;
+padding-top:16px;
+border-top:1px solid var(--border);
+font-size:.75rem;
+color:var(--muted);
+display:flex;
+justify-content:space-between;
+}
 
-    @media (max-width:700px){
-      .content{
-        padding:22px;
-      }
+@media (max-width:700px){
+.grid{
+grid-template-columns:1fr;
+}
 
-      .header{
-        flex-direction:column;
-        align-items:flex-start;
-      }
-
-      .header-side{
-        text-align:left;
-      }
-
-      .grid{
-        grid-template-columns:1fr;
-      }
-
-      .footer{
-        flex-direction:column;
-        align-items:flex-start;
-      }
-
-      .footer-right{
-        text-align:left;
-      }
-    }
-
-    @media (max-width:420px){
-      body{
-        padding:14px;
-      }
-
-      .content{
-        padding:18px;
-      }
-
-      .project{
-        padding:14px;
-      }
-
-      .project-desc{
-        min-height:auto;
-      }
-    }
-  </style>
+.header{
+flex-direction:column;
+gap:10px;
+}
+}
+</style>
 </head>
 
 <body>
-  <div class="container">
-    <div class="panel">
-      <div class="content">
-        <div class="header">
-          <div>
-            <div class="eyebrow">
-              <span class="eyebrow-dot"></span>
-              Hub de Projetos
-            </div>
 
-            <h1>Workday</h1>
-            <p class="subtitle">
-              Um hub central para acessar meus projetos de forma rápida, limpa e organizada.
-            </p>
-          </div>
+<div class="container">
+<div class="panel">
+<div class="content">
 
-          <div class="header-side">
-            <div class="count">04</div>
-            <div class="count-label">Projetos ativos</div>
-          </div>
-        </div>
+<div class="header">
+<div>
+<div class="eyebrow">
+<span class="eyebrow-dot"></span>
+Hub de Projetos
+</div>
 
-        <div class="grid">
-          <a class="project" href="https://s1mpl3s.vercel.app/" target="_blank" rel="noopener noreferrer">
-            <div class="project-top">
-              <div class="icon">💬</div>
-              <div class="status">Online</div>
-            </div>
-            <div class="project-name">b2b wpp</div>
-            <div class="project-desc">
-              Projeto focado em comunicação e interface inspirada em experiência de chat.
-            </div>
-            <div class="project-bottom">
-              <div class="tag">Chat</div>
-              <div class="open">Abrir <span>↗</span></div>
-            </div>
-          </a>
+<h1>Workday</h1>
 
-          <a class="project" href="https://f4ll1ng.vercel.app/" target="_blank" rel="noopener noreferrer">
-            <div class="project-top">
-              <div class="icon">🧩</div>
-              <div class="status">Online</div>
-            </div>
-            <div class="project-name">Tetris</div>
-            <div class="project-desc">
-              Jogo no estilo retrô com foco em simplicidade, gameplay direta e identidade própria.
-            </div>
-            <div class="project-bottom">
-              <div class="tag">Game</div>
-              <div class="open">Abrir <span>↗</span></div>
-            </div>
-          </a>
+<p class="subtitle">
+Um hub central para acessar meus projetos.
+</p>
+</div>
 
-          <a class="project" href="https://as4d5a4s.vercel.app" target="_blank" rel="noopener noreferrer">
-            <div class="project-top">
-              <div class="icon">🎵</div>
-              <div class="status">Online</div>
-            </div>
-            <div class="project-name">fake spotify</div>
-            <div class="project-desc">
-              Interface inspirada em plataforma de música, com proposta visual moderna e familiar.
-            </div>
-            <div class="project-bottom">
-              <div class="tag">UI Clone</div>
-              <div class="open">Abrir <span>↗</span></div>
-            </div>
-          </a>
+<div class="header-side">
+<div class="count">04</div>
+<div class="count-label">Projetos</div>
+</div>
+</div>
 
-          <a class="project" href="https://ylsacaqafb.vercel.app" target="_blank" rel="noopener noreferrer">
-            <div class="project-top">
-              <div class="icon">🛰️</div>
-              <div class="status">Online</div>
-            </div>
-            <div class="project-name">ylsacaqafb</div>
-            <div class="project-desc">
-              Projeto experimental com identidade mais isolada e proposta própria dentro do hub.
-            </div>
-            <div class="project-bottom">
-              <div class="tag">Experimental</div>
-              <div class="open">Abrir <span>↗</span></div>
-            </div>
-          </a>
-        </div>
 
-        <div class="footer">
-          <div class="footer-left">
-            Central de acesso dos meus projetos.
-          </div>
-          <div class="footer-right">
-            Workday v1.0.2026.03.07 — Final Build by fragass
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="grid">
+
+<a class="project" href="https://s1mpl3s.vercel.app/" target="_blank">
+<div class="project-top">
+<div class="icon">💬</div>
+<div class="status online">Online</div>
+</div>
+
+<div class="project-name">b2b wpp</div>
+
+<div class="project-desc">
+Projeto focado em comunicação estilo chat.
+</div>
+
+<div class="project-bottom">
+<div class="tag">Chat</div>
+<div class="open">Abrir ↗</div>
+</div>
+</a>
+
+
+<a class="project" href="https://f4ll1ng.vercel.app/" target="_blank">
+<div class="project-top">
+<div class="icon">🧩</div>
+<div class="status online">Online</div>
+</div>
+
+<div class="project-name">Tetris</div>
+
+<div class="project-desc">
+Versão minimalista do clássico jogo de blocos.
+</div>
+
+<div class="project-bottom">
+<div class="tag">Game</div>
+<div class="open">Abrir ↗</div>
+</div>
+</a>
+
+
+<div class="project offline">
+
+<div class="project-top">
+<div class="icon">🎵</div>
+<div class="status offline">Offline</div>
+</div>
+
+<div class="project-name">fake spotify</div>
+
+<div class="project-desc">
+Interface inspirada em plataforma de streaming.
+</div>
+
+<div class="project-bottom">
+<div class="tag">UI Clone</div>
+</div>
+
+</div>
+
+
+<div class="project offline">
+
+<div class="project-top">
+<div class="icon">🛰️</div>
+<div class="status offline">Offline</div>
+</div>
+
+<div class="project-name">ylsacaqafb</div>
+
+<div class="project-desc">
+Projeto experimental atualmente indisponível.
+</div>
+
+<div class="project-bottom">
+<div class="tag">Experimental</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+</div>
+</div>
+
 </body>
 </html>
